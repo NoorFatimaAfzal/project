@@ -4,14 +4,18 @@ import random
 
 root = Tk()
 
+
 frame=LabelFrame(
     root,
     text="This is my frame...",
     padx=50,
     pady=50,
-    background="blue"
+    background="#007875",
+    width=1300,  # Set a fixed width for the frame
+    height=700  # Set a fixed height for the frame
 )
 frame.pack(padx=5, pady=5)
+frame.pack_propagate(False)
 
 
 questions=[
@@ -45,6 +49,7 @@ answers = [3,1,1,2,0,0,3,0,3,0]
 user_answer=[]
 
 
+
 indexes=[]
 def gen():
     global indexes
@@ -55,7 +60,7 @@ def gen():
         else:
             indexes.append(x)
 
-def show_result(score):
+def show_result(score, correct_answers, wrong_answers, skipped_questions):
     # Destroy existing widgets
     lbl_Questions.destroy()
     r1.destroy()
@@ -68,9 +73,12 @@ def show_result(score):
     # Display the score on the same frame
     score_label = Label(
         frame,
-        text="Your score is: " + str(score),
+        text=f"Your score is: {score}\n\n"
+             f"Correct Answers: {correct_answers}\n"
+             f"Wrong Answers: {wrong_answers}\n"
+             f"Skipped Questions: {skipped_questions}",
         font=("Comic Sans MS", 16),
-        background="#ffffff"
+        background="#007875"
     )
     score_label.pack(pady=20)
 
@@ -80,13 +88,23 @@ def calc():
     global indexes, user_answer
     x = 0
     score = 0
+    correct_answers = 0
+    wrong_answers = 0
+    skipped_questions = 0
+    
     while len(user_answer) < len(indexes):
         user_answer.append(-1)
+        
     for i in indexes:
-        if user_answer[x] == answers[i]:
+        if user_answer[x] == -1:
+            skipped_questions += 1
+        elif user_answer[x] == answers[i]:
             score += 10
+            correct_answers += 1
+        else:
+            wrong_answers += 1
         x += 1
-    show_result(score) 
+    show_result(score, correct_answers, wrong_answers, skipped_questions)
     destroy_widgets()
 
 def destroy_widgets():
@@ -116,7 +134,7 @@ def create_skip_submit_buttons():
         command=selected, 
         relief=RAISED, 
         border=2, 
-        background="#ffffff", 
+        background="#007875", 
         font=("Comic Sans MS", 16)
     )
     btn_skip.pack(side=BOTTOM, padx=20, pady=20)
@@ -127,7 +145,7 @@ def create_skip_submit_buttons():
         command=calc, 
         relief=RAISED, 
         border=2, 
-        background="#ffffff", 
+        background="#007875", 
         font=("Comic Sans MS", 16)
     )
     btn_submit.pack(side=BOTTOM, padx=20, pady=20)               
@@ -160,7 +178,7 @@ def start_quiz():
         width=500,
         justify="center",
         wraplength=400,
-        background="#ffffff"
+        background="#007875"
 
     )
     lbl_Questions.pack(pady=(100,30))
@@ -176,7 +194,7 @@ def start_quiz():
         value=0,
         variable=radio_var,
         command=selected,
-        background="#ffffff"
+        background="#007875"
     )
     r1.pack(pady=5)
 
@@ -187,7 +205,7 @@ def start_quiz():
         value=1,
         variable=radio_var,
         command=selected,
-        background="#ffffff"
+        background="#007875"
     )
     r2.pack(pady=5)
 
@@ -198,7 +216,7 @@ def start_quiz():
         value=2,
         variable=radio_var,
         command=selected,
-        background="#ffffff"
+        background="#007875"
     )
     r3.pack(pady=5)
 
@@ -209,7 +227,7 @@ def start_quiz():
         value=3,
         variable=radio_var,
         command=selected,
-        background="#ffffff"
+        background="#007875"
     )
     r4.pack(pady=5)
 
@@ -240,15 +258,15 @@ def create_widgets():
 
     create_header()
     create_instruction_label()
-    create_rules_label()
     create_start_button()
+    create_rules_label()
 
 def create_header():
     global label_image, label_text
     label_image = Label(
             frame,
             image=img1,
-            background="#ffffff"
+            background="#007875"
     )
     label_image.pack()
 
@@ -256,7 +274,7 @@ def create_header():
         frame,
         text="Welcome to UET ECAT",
         font=("Comic Sans MS", 24, "bold"),
-        bg="#ffffff"
+        bg="#007875"
     )
     label_text.pack(pady=(40, 0))
 
@@ -268,10 +286,10 @@ def create_start_button():
         command=startButtonPressed,
         relief=RAISED,
         border=2,
-        background="#ffffff", 
+        background="#007875", 
         font=("Comic Sans MS", 16)
     )
-    btn_start.pack(pady=(20, 0))
+    btn_start.pack(pady=(20, 5))
 
 
 
@@ -282,7 +300,7 @@ def create_instruction_label():
     lbl_instruction = Label(
         frame, 
         text="Read the rules\nClick start when you are ready", 
-        bg="#ffffff", 
+        bg="#007875", 
         font=("Comic Sans MS", 14), 
         justify="center"
     )
@@ -295,7 +313,7 @@ def create_rules_label():
         text="This quiz contains 20 questions\nYou will get 20 minutes to solve the quiz\nOnce you select a radio button that will be a final choice\nThe quiz will start as soon as you click the start button",
         width=100,
         font=("Times", 14),
-        background="#ffffff", 
+        background="#007875", 
         foreground="#FACA2F"
     )
     lbl_rules.pack(pady=(10,0))
