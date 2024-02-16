@@ -43,77 +43,73 @@ answers_choice = [
     ["inexperience of a person", "the faulty apparantus", "inappropriate method", "due to all reasons in a, b and c"],
     ["1.024x103", "2 Raised to power 10", "0.000976", "1/0.00097"],
 ]
-
-answers = [3, 1, 1, 2, 0, 0, 3, 0, 3, 0]
-
-user_answer = []
-
-ques = 0
+  
 
 
-def show_result(score, correct_answers, wrong_answers, skipped_questions):
-    # Destroy existing widgets
-    lbl_Questions.destroy()
-    r1.destroy()
-    r2.destroy()
-    r3.destroy()
-    r4.destroy()
-    btn_skip.destroy()
-    btn_submit.destroy()
+#widgets created
 
-    # Display the score on the same frame
-    score_label = Label(
+
+
+def create_widgets():
+    global label_image, label_text, btn_start, lbl_instruction, lbl_rules
+
+    create_header()
+    create_instruction_label()
+    create_start_button()
+    create_rules_label()
+
+def create_header():
+    global label_image, label_text
+    label_image = Label(
         frame,
-        text=f"Your score is: {score}\n\n"
-             f"Correct Answers: {correct_answers}\n"
-             f"Wrong Answers: {wrong_answers}\n"
-             f"Skipped Questions: {skipped_questions}",
-        font=("Comic Sans MS", 16),
+        image=img1,
         background="#007875"
     )
-    score_label.pack(pady=20)
+    label_image.pack()
 
+    label_text = Label(
+        frame,
+        text="Welcome to UET ECAT",
+        font=("Comic Sans MS", 24, "bold"),
+        bg="#007875"
+    )
+    label_text.pack(pady=(40, 0))    
 
-def calc():
-    global ques, user_answer
-    x = 0
-    score = 0
-    correct_answers = 0
-    wrong_answers = 0
-    skipped_questions = 0
+def create_instruction_label():
+    global lbl_instruction
+    lbl_instruction = Label(
+        frame,
+        text="Read the rules\nClick start when you are ready",
+        bg="#007875",
+        font=("Comic Sans MS", 14),
+        justify="center"
+    )
+    lbl_instruction.pack(pady=(10, 0))
 
-    while len(user_answer) < len(questions):
-        user_answer.append(-1)
+def create_start_button():
+    global btn_start
+    btn_start = Button(
+        frame,
+        text="Start",
+        command=startButtonPressed,
+        relief=RAISED,
+        border=2,
+        background="#007875",
+        font=("Comic Sans MS", 16)
+    )
+    btn_start.pack(pady=(20, 5))
 
-    for i in range(len(questions)):
-        if user_answer[i] == -1:
-            skipped_questions += 1
-        elif user_answer[i] == answers[i]:
-            score += 10
-            correct_answers += 1
-        else:
-            wrong_answers += 1
-    show_result(score, correct_answers, wrong_answers, skipped_questions)
-    destroy_widgets()
-
-
-def destroy_widgets():
-    lbl_instruction.destroy()
-    lbl_rules.destroy()
-    btn_start.destroy()
-
-    label_image.destroy()
-    label_text.destroy()
-
-    btn_submit.destroy()
-    btn_skip.destroy()
-
-    lbl_Questions.destroy()
-    r1.destroy()
-    r2.destroy()
-    r3.destroy()
-    r4.destroy()
-
+def create_rules_label():
+    global lbl_rules
+    lbl_rules = Label(
+        frame,
+        text="You will get 20 minutes to solve the quiz",
+        width=100,
+        font=("Times", 14),
+        background="#007875",
+        foreground="#FACA2F"
+    )
+    lbl_rules.pack(pady=(10, 0))
 
 def create_skip_submit_buttons():
     global btn_skip, btn_submit
@@ -140,23 +136,9 @@ def create_skip_submit_buttons():
     btn_submit.pack(side=BOTTOM, padx=20, pady=20)
 
 
-def selected():
-    global radio_var, lbl_Questions, r1, r2, r3, r4, user_answer, ques
-    x = radio_var.get()
-    user_answer.append(x)
-    radio_var.set(-1)
-    if ques < len(questions) - 1:
-        ques += 1
-        lbl_Questions.config(text=questions[ques])
-        r1['text'] = answers_choice[ques][0]
-        r2['text'] = answers_choice[ques][1]
-        r3['text'] = answers_choice[ques][2]
-        r4['text'] = answers_choice[ques][3]
-    else:
-        btn_skip.config(state=DISABLED)  # Disable skip button when all questions are answered
-        calc()  # Call calc() function to calculate the score
 
-
+#didderent functions and their implementations
+    
 def start_quiz():
     global lbl_Questions, ques
     lbl_Questions = Label(
@@ -217,8 +199,7 @@ def start_quiz():
         command=selected,
         background="#007875"
     )
-    r4.pack(pady=5)
-
+    r4.pack(pady=5)    
 
 def startButtonPressed():
     global label_image, label_text, btn_start, lbl_instruction, lbl_rules, ques
@@ -230,71 +211,96 @@ def startButtonPressed():
     create_skip_submit_buttons()  # Call the function to create skip and submit buttons
     start_quiz()
 
+def destroy_widgets():
+    lbl_instruction.destroy()
+    lbl_rules.destroy()
+    btn_start.destroy()
 
-def create_widgets():
-    global label_image, label_text, btn_start, lbl_instruction, lbl_rules
+    label_image.destroy()
+    label_text.destroy()
 
-    create_header()
-    create_instruction_label()
-    create_start_button()
-    create_rules_label()
+    btn_submit.destroy()
+    btn_skip.destroy()
 
+    lbl_Questions.destroy()
+    r1.destroy()
+    r2.destroy()
+    r3.destroy()
+    r4.destroy()
 
-def create_header():
-    global label_image, label_text
-    label_image = Label(
+def selected():
+    global radio_var, lbl_Questions, r1, r2, r3, r4, user_answer, ques
+    x = radio_var.get()
+    user_answer.append(x)
+    radio_var.set(-1)
+    if ques < len(questions) - 1:
+        ques += 1
+        lbl_Questions.config(text=questions[ques])
+        r1['text'] = answers_choice[ques][0]
+        r2['text'] = answers_choice[ques][1]
+        r3['text'] = answers_choice[ques][2]
+        r4['text'] = answers_choice[ques][3]
+    else:
+        btn_skip.config(state=DISABLED)  # Disable skip button when all questions are answered
+        calc()  # Call calc() function to calculate the score
+
+answers = [3, 1, 1, 2, 0, 0, 3, 0, 3, 0]
+user_answer = []
+ques = 0
+
+def calc():
+    global ques, user_answer
+    x = 0
+    score = 0
+    correct_answers = 0
+    wrong_answers = 0
+    skipped_questions = 0
+
+    while len(user_answer) < len(questions):
+        user_answer.append(-1)
+
+    for i in range(len(questions)):
+        if user_answer[i] == -1:
+            skipped_questions += 1
+        elif user_answer[i] == answers[i]:
+            score += 10
+            correct_answers += 1
+        else:
+            wrong_answers += 1
+
+    eligibility_label = Label(
         frame,
-        image=img1,
+        text="Congratulations, you are eligible for admission" if score > 33 else "Not eligible for admission",
+        font=("Comic Sans MS", 16),
         background="#007875"
     )
-    label_image.pack()
+    eligibility_label.pack(pady=20)
 
-    label_text = Label(
+
+    show_result(score, correct_answers, wrong_answers, skipped_questions)
+    destroy_widgets()
+
+def show_result(score, correct_answers, wrong_answers, skipped_questions):
+    # Destroy existing widgets
+    lbl_Questions.destroy()
+    r1.destroy()
+    r2.destroy()
+    r3.destroy()
+    r4.destroy()
+    btn_skip.destroy()
+    btn_submit.destroy()
+
+    # Display the score on the same frame
+    score_label = Label(
         frame,
-        text="Welcome to UET ECAT",
-        font=("Comic Sans MS", 24, "bold"),
-        bg="#007875"
+        text=f"Your score is: {score}\n\n"
+             f"Correct Answers: {correct_answers}\n"
+             f"Wrong Answers: {wrong_answers}\n"
+             f"Skipped Questions: {skipped_questions}",
+        font=("Comic Sans MS", 16),
+        background="#007875"
     )
-    label_text.pack(pady=(40, 0))
-
-
-def create_start_button():
-    global btn_start
-    btn_start = Button(
-        frame,
-        text="Start",
-        command=startButtonPressed,
-        relief=RAISED,
-        border=2,
-        background="#007875",
-        font=("Comic Sans MS", 16)
-    )
-    btn_start.pack(pady=(20, 5))
-
-
-def create_instruction_label():
-    global lbl_instruction
-    lbl_instruction = Label(
-        frame,
-        text="Read the rules\nClick start when you are ready",
-        bg="#007875",
-        font=("Comic Sans MS", 14),
-        justify="center"
-    )
-    lbl_instruction.pack(pady=(10, 0))
-
-
-def create_rules_label():
-    global lbl_rules
-    lbl_rules = Label(
-        frame,
-        text="You will get 20 minutes to solve the quiz",
-        width=100,
-        font=("Times", 14),
-        background="#007875",
-        foreground="#FACA2F"
-    )
-    lbl_rules.pack(pady=(10, 0))
+    score_label.pack(pady=20)
 
 
 img1 = PhotoImage(file="uet.png")
