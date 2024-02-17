@@ -1,6 +1,11 @@
 import tkinter
 from tkinter import *
+from tkinter import messagebox
 from PIL import ImageTk, Image
+
+
+
+
 
 root = Tk()
 root.title("First project")
@@ -89,7 +94,7 @@ def create_start_button():
     btn_start = Button(
         frame,
         text="Start",
-        command=startButtonPressed,
+        command=startButtonPressed, 
         relief=RAISED,
         border=2,
         background="#007875",
@@ -132,6 +137,7 @@ def create_skip_submit_buttons():
         font=("Comic Sans MS", 16)
     )
     btn_submit.pack(side=BOTTOM, padx=20, pady=20)
+
 
 ques = 0
 
@@ -198,15 +204,24 @@ def start_quiz():
 
 # Different functions's implementations
 
+ # Call the function to start the quiz jisme questions and options honge
+
 def startButtonPressed():
-    global label_image, label_text, btn_start, lbl_instruction, lbl_rules, ques
-    label_image.destroy()
-    label_text.destroy()
-    btn_start.destroy()
-    lbl_instruction.destroy()
-    lbl_rules.destroy()
-    create_skip_submit_buttons()  # Call the function to create skip and submit buttons
-    start_quiz()  # Call the function to start the quiz jisme questions and options honge
+    response = messagebox.askyesno("This is my popup", "Do you want to start the quiz?")
+    if response:
+        # If the user selects "Yes", proceed to start the quiz
+        label_image.destroy()
+        label_text.destroy()
+        btn_start.destroy()
+        lbl_instruction.destroy()
+        lbl_rules.destroy()
+        create_skip_submit_buttons()  # Call the function to create skip and submit buttons
+        start_quiz()
+    else:
+        # If the user selects "No", close the window
+        root.destroy()
+ 
+
 
 def destroy_widgets():
     lbl_instruction.destroy()
