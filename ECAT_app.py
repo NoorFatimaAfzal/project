@@ -4,6 +4,8 @@ from PIL import ImageTk, Image
 
 root = Tk()
 root.title("First project")
+root.iconbitmap("favicon.ico")
+img1 = PhotoImage(file="uet.png")
 
 frame = LabelFrame(
     root,
@@ -43,12 +45,8 @@ answers_choice = [
     ["inexperience of a person", "the faulty apparantus", "inappropriate method", "due to all reasons in a, b and c"],
     ["1.024x103", "2 Raised to power 10", "0.000976", "1/0.00097"],
 ]
-  
-
 
 #widgets created
-
-
 
 def create_widgets():
     global label_image, label_text, btn_start, lbl_instruction, lbl_rules
@@ -73,7 +71,7 @@ def create_header():
         font=("Comic Sans MS", 24, "bold"),
         bg="#007875"
     )
-    label_text.pack(pady=(40, 0))    
+    label_text.pack(pady=(40, 0))
 
 def create_instruction_label():
     global lbl_instruction
@@ -116,7 +114,7 @@ def create_skip_submit_buttons():
     btn_skip = Button(
         frame,
         text="Skip",
-        command=selected,
+        command=skipQuestion,
         relief=RAISED,
         border=2,
         background="#007875",
@@ -135,10 +133,8 @@ def create_skip_submit_buttons():
     )
     btn_submit.pack(side=BOTTOM, padx=20, pady=20)
 
+ques = 0
 
-
-#didderent functions and their implementations
-    
 def start_quiz():
     global lbl_Questions, ques
     lbl_Questions = Label(
@@ -149,20 +145,19 @@ def start_quiz():
         justify="center",
         wraplength=400,
         background="#007875"
-
     )
     lbl_Questions.pack(pady=(100, 30))
 
     global radio_var, r1, r2, r3, r4
-    radio_var = IntVar()
-    radio_var.set(-1)
+    radio_var = IntVar()   # Create an IntVar object to store the selected value
+    radio_var.set(-1)   # Initialize the radio button value to -1
 
     r1 = Radiobutton(
         frame,
         text=answers_choice[ques][0],
         font=("Comic Sans MS", 12),
         value=0,
-        variable=radio_var,
+        variable=radio_var,   # to ensure that only one radio button can be selected at a time
         command=selected,
         background="#007875"
     )
@@ -173,7 +168,7 @@ def start_quiz():
         text=answers_choice[ques][1],
         font=("Comic Sans MS", 12),
         value=1,
-        variable=radio_var,
+        variable=radio_var,  # to ensure that only one radio button can be selected at a time
         command=selected,
         background="#007875"
     )
@@ -184,7 +179,7 @@ def start_quiz():
         text=answers_choice[ques][2],
         font=("Comic Sans MS", 12),
         value=2,
-        variable=radio_var,
+        variable=radio_var, # to ensure that only one radio button can be selected at a time
         command=selected,
         background="#007875"
     )
@@ -195,11 +190,13 @@ def start_quiz():
         text=answers_choice[ques][3],
         font=("Comic Sans MS", 12),
         value=3,
-        variable=radio_var,
+        variable=radio_var, # to ensure that only one radio button can be selected at a time
         command=selected,
         background="#007875"
     )
-    r4.pack(pady=5)    
+    r4.pack(pady=5)
+
+# Different functions's implementations
 
 def startButtonPressed():
     global label_image, label_text, btn_start, lbl_instruction, lbl_rules, ques
@@ -209,7 +206,7 @@ def startButtonPressed():
     lbl_instruction.destroy()
     lbl_rules.destroy()
     create_skip_submit_buttons()  # Call the function to create skip and submit buttons
-    start_quiz()
+    start_quiz()  # Call the function to start the quiz jisme questions and options honge
 
 def destroy_widgets():
     lbl_instruction.destroy()
@@ -228,57 +225,61 @@ def destroy_widgets():
     r3.destroy()
     r4.destroy()
 
+skipped_questions = 0
+user_answer = []
+
 def selected():
-    global radio_var, lbl_Questions, r1, r2, r3, r4, user_answer, ques
-    x = radio_var.get()
+    global radio_var, lbl_Questions, r1, r2, r3, r4, user_answer, ques, skipped_questions
+    x = radio_var.get() #is sy pata chale ga k user ne konsa option select kia hai
+    print("Current value of x:", x)
     user_answer.append(x)
-    radio_var.set(-1)
+    radio_var.set(-1) # is waja sy next question pe ja k user ko select krny ka option milta hai aor yha par do options select nhi ho skty
+
     if ques < len(questions) - 1:
         ques += 1
-        lbl_Questions.config(text=questions[ques])
-        r1['text'] = answers_choice[ques][0]
+        lbl_Questions.config(text=questions[ques]) # it tee=lls k labl question k text ko change krdo
+        r1['text'] = answers_choice[ques][0] # ye btata hai k r1(yani first radio button) ki jga par konsa option hoga
         r2['text'] = answers_choice[ques][1]
         r3['text'] = answers_choice[ques][2]
         r4['text'] = answers_choice[ques][3]
     else:
-        btn_skip.config(state=DISABLED)  # Disable skip button when all questions are answered
-        calc()  # Call calc() function to calculate the score
+        btn_skip.config(state=DISABLED)
+        calc()
+
+    if x == -1:  # mtlb k user ne koi option select nhi kia aor skip kr dia hai
+        skipped_questions += 1 
+        print("Skipped questions:", skipped_questions)
+        lbl_Questions.config(text=questions[ques])  # next question display krdo
+
+def skipQuestion():
+    global skipped_questions
+    skipped_questions += 1
+    lbl_Questions.config(text=questions[ques])  # Display the next question
+
 
 answers = [3, 1, 1, 2, 0, 0, 3, 0, 3, 0]
-user_answer = []
-ques = 0
 
 def calc():
-    global ques, user_answer
-    x = 0
+    global user_answer, skipped_questions
     score = 0
     correct_answers = 0
     wrong_answers = 0
-    skipped_questions = 0
-
-    while len(user_answer) < len(questions):
-        user_answer.append(-1)
 
     for i in range(len(questions)):
-        if user_answer[i] == -1:
-            skipped_questions += 1
-        elif user_answer[i] == answers[i]:
-            score += 10
-            correct_answers += 1
-        else:
-            wrong_answers += 1
-
-    eligibility_label = Label(
-        frame,
-        text="Congratulations, you are eligible for admission" if score > 33 else "Not eligible for admission",
-        font=("Comic Sans MS", 16),
-        background="#007875"
-    )
-    eligibility_label.pack(pady=20)
-
+        if i < len(user_answer):  # Ensure index is within user_answer list
+            if user_answer[i] == -1:
+                skipped_questions += 1
+            elif user_answer[i] == answers[i]:
+                score += 10
+                correct_answers += 1
+            else:
+                wrong_answers += 1
+        # else:
+        #     skipped_questions += 1 
 
     show_result(score, correct_answers, wrong_answers, skipped_questions)
     destroy_widgets()
+
 
 def show_result(score, correct_answers, wrong_answers, skipped_questions):
     # Destroy existing widgets
@@ -302,14 +303,6 @@ def show_result(score, correct_answers, wrong_answers, skipped_questions):
     )
     score_label.pack(pady=20)
 
-
-img1 = PhotoImage(file="uet.png")
-
-label_image = None
-label_text = None
-btn_start = None
-lbl_instruction = None
-lbl_rules = None
 
 create_widgets()
 
