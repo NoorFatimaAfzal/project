@@ -129,6 +129,16 @@ def create_widgets():
     create_start_button()
     create_rules_label()
 
+def start_timer():
+    global timer_seconds
+    if timer_seconds > 0:
+        timer_label.config(text=f"Time left: {timer_seconds} seconds")
+        timer_seconds -= 1
+        timer_label.after(1000, start_timer)
+    else:
+        messagebox.showinfo("Timer", "Time's up!")
+        root.destroy()
+
 def create_header():
     global label_image, label_text
     label_image = Label(
@@ -193,7 +203,7 @@ def create_skip_submit_buttons():
         background="#007875",
         font=("Comic Sans MS", 16)
     )
-    btn_skip.pack(side=BOTTOM, padx=20, pady=20)
+    btn_skip.pack(side=BOTTOM, pady=(5, 5))
 
     btn_submit = Button(
         frame,
@@ -204,7 +214,7 @@ def create_skip_submit_buttons():
         background="#007875",
         font=("Comic Sans MS", 16)
     )
-    btn_submit.pack(side=BOTTOM, padx=20, pady=20)
+    btn_submit.pack(side=BOTTOM, pady=(5, 5))
 
 def start_quiz():
     global lbl_Questions, ques
@@ -217,7 +227,7 @@ def start_quiz():
         wraplength=400,
         background="#007875"
     )
-    lbl_Questions.pack(pady=(100, 30))
+    lbl_Questions.pack(pady=(50, 10))
 
     global radio_var, r1, r2, r3, r4
     radio_var = IntVar()   # Create an IntVar object to store the selected value
@@ -232,7 +242,7 @@ def start_quiz():
         command=selected,
         background="#007875"
     )
-    r1.pack(pady=5)
+    r1.pack(pady=3)
 
     r2 = Radiobutton(
         frame,
@@ -243,7 +253,7 @@ def start_quiz():
         command=selected,
         background="#007875"
     )
-    r2.pack(pady=5)
+    r2.pack(pady=3)
 
     r3 = Radiobutton(
         frame,
@@ -254,7 +264,7 @@ def start_quiz():
         command=selected,
         background="#007875"
     )
-    r3.pack(pady=5)
+    r3.pack(pady=3)
 
     r4 = Radiobutton(
         frame,
@@ -265,7 +275,7 @@ def start_quiz():
         command=selected,
         background="#007875"
     )
-    r4.pack(pady=5)
+    r4.pack(pady=3)
 
 def congrats_image():
     img = Image.open("congrats.png")
@@ -306,6 +316,7 @@ def startButtonPressed():
         lbl_rules.destroy()
         create_skip_submit_buttons()  # Call the function to create skip and submit buttons
         start_quiz()
+        start_timer()
     else:
         # If the user selects "No", close the window
         root.destroy()
@@ -411,5 +422,14 @@ def show_result(score, correct_answers, wrong_answers, skipped_questions):
         background="#007875"
     )
     score_label.pack(pady=20)
+
+timer_seconds = 600  # 10 minutes = 600 seconds
+timer_label = Label(
+    frame,
+    font=("Comic Sans MS", 16),
+    background="#007875"
+)
+timer_label.pack(pady=(5, 5))
+
 
 root.mainloop()
