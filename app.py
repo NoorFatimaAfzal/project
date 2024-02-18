@@ -1,118 +1,12 @@
+import tkinter
 from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk, Image
 
-def login():
-    username = entry1.get()
-    password = entry2.get()
-    if username == "noor" and password == "butt":
-        # If login is successful, hide login screen and show UET logo screen
-        login_frame.pack_forget()
-        uet_logo_frame.pack()
-    else:
-        # If login fails, show an error message
-        messagebox.showerror("Login Failed", "Invalid username or password")
-
-def startButtonPressed():
-    response = messagebox.askyesno("This is my popup", "Do you want to start the quiz?")
-    if response:
-        # If the user selects "Yes", proceed to start the quiz
-        uet_logo_frame.pack_forget()
-        create_skip_submit_buttons()  # Call the function to create skip and submit buttons
-        start_quiz()
-    else:
-        # If the user selects "No", close the window
-        root.destroy()
-
-def create_widgets():
-    global login_frame, uet_logo_frame
-
-    # Login Frame
-    login_frame = Frame(root, background="#007875")
-    login_frame.pack(padx=5, pady=5)
-    
-    label1 = Label(
-        login_frame, 
-        text="Login Page", 
-        font=("Comic Sans MS", 30), 
-        background="#007875", 
-        fg="black"
-    )
-    label1.grid(row=0, column=0, columnspan=2, pady=(20, 0))
-
-    label2 = Label(
-        login_frame, 
-        text="Username: ", 
-        font=("Comic Sans MS", 20), 
-        background="#007875", 
-        fg="black"
-    )
-    label2.grid(row=1, column=0, padx=(50, 10), pady=20)
-
-    label3 = Label(
-        login_frame, 
-        text="Password: ", 
-        font=("Comic Sans MS", 20), 
-        background="#007875", 
-        fg="black"
-    )
-    label3.grid(row=2, column=0, padx=(50, 10))
-
-    global entry1, entry2
-    entry1 = Entry(
-        login_frame, 
-        font=("Comic Sans MS", 20), 
-        background="white", 
-        fg="black"
-    )
-    entry1.grid(row=1, column=1, padx=(10, 50), pady=20)
-
-    entry2 = Entry(
-        login_frame, 
-        font=("Comic Sans MS", 20), 
-        background="white", 
-        fg="black",
-        show="."
-    )
-    entry2.grid(row=2, column=1, padx=(10, 50))
-
-    button = Button(
-        login_frame, 
-        text="Login", 
-        font=("Comic Sans MS", 20), 
-        background="white", 
-        fg="black",
-        command=login
-    )
-    button.grid(row=3, column=0, columnspan=2, pady=20)
-
-    # UET Logo Frame
-    uet_logo_frame = Frame(root, background="#007875")
-    label_image = Label(
-        uet_logo_frame,
-        image=img1,
-        background="#007875"
-    )
-    label_image.pack()
-
-    label_text = Label(
-        uet_logo_frame,
-        text="Welcome to UET ECAT",
-        font=("Comic Sans MS", 24, "bold"),
-        bg="#007875"
-    )
-    label_text.pack(pady=(40, 0))
-
-    # Initially show only the login frame
-    uet_logo_frame.pack_forget()
-
-img1 = PhotoImage(file="uet.png")
-
 root = Tk()
 root.title("First project")
 root.iconbitmap("favicon.ico")
-root.configure(background="#007875")
-root.geometry("1300x760")
+img1 = PhotoImage(file="uet.png")
 
 frame = LabelFrame(
     root,
@@ -152,6 +46,146 @@ answers_choice = [
     ["inexperience of a person", "the faulty apparantus", "inappropriate method", "due to all reasons in a, b and c"],
     ["1.024x103", "2 Raised to power 10", "0.000976", "1/0.00097"],
 ]
+
+#widgets created
+
+def login():
+    username = entry1.get()
+    password = entry2.get()
+    if username == "" and password == "":
+        messagebox.showerror("Login", "Please enter username and password")
+    elif username == "noor" and password == "butt":
+        messagebox.showinfo("Login", "Login successful")
+        label1.destroy()
+        label2.destroy()
+        label3.destroy()
+        entry1.destroy()
+        entry2.destroy()
+        button.destroy()
+        # Show quiz interface
+        create_widgets()   
+    else:
+        messagebox.showerror("Login", "Login failed")
+
+def loginPage():
+    global label1 
+label1 = Label(
+    root, 
+    text="Login Page", 
+    font=("Comic Sans MS", 30), 
+    background="#007875", 
+    fg="black"
+)
+label1.place(x=500, y=20)    
+
+label2 = Label(
+    root, 
+    text="Username: ", 
+    font=("Comic Sans MS", 20), 
+    background="#007875", 
+    fg="black"
+)
+label2.place(x=400, y=190)
+
+label3 = Label(
+    root, 
+    text="Password: ", 
+    font=("Comic Sans MS", 20), 
+    background="#007875", 
+    fg="black"
+)
+label3.place(x=400, y=340)
+
+entry1 = Entry(
+    root, 
+    font=("Comic Sans MS", 20), 
+    background="white", 
+    fg="black"
+)
+entry1.place(x=600, y=200)
+
+entry2 = Entry(
+    root, 
+    font=("Comic Sans MS", 20), 
+    background="white", 
+    fg="black",
+    show="."
+)
+entry2.place(x=600, y=350)
+
+button = Button(
+    root, 
+    text="Login", 
+    font=("Comic Sans MS", 20), 
+    background="white", 
+    fg="black",
+    command=login
+)
+button.place(x=550, y=500)
+
+
+
+
+def create_widgets():
+    global label_image, label_text, btn_start, lbl_instruction, lbl_rules
+
+    create_header()
+    create_instruction_label()
+    create_start_button()
+    create_rules_label()
+
+def create_header():
+    global label_image, label_text
+    label_image = Label(
+        frame,
+        image=img1,
+        background="#007875"
+    )
+    label_image.pack()
+
+    label_text = Label(
+        frame,
+        text="Welcome to UET ECAT",
+        font=("Comic Sans MS", 24, "bold"),
+        bg="#007875"
+    )
+    label_text.pack(pady=(40, 0))
+
+def create_instruction_label():
+    global lbl_instruction
+    lbl_instruction = Label(
+        frame,
+        text="Read the rules\nClick start when you are ready",
+        bg="#007875",
+        font=("Comic Sans MS", 14),
+        justify="center"
+    )
+    lbl_instruction.pack(pady=(10, 0))
+
+def create_start_button():
+    global btn_start
+    btn_start = Button(
+        frame,
+        text="Start",
+        command=startButtonPressed, 
+        relief=RAISED,
+        border=2,
+        background="#007875",
+        font=("Comic Sans MS", 16)
+    )
+    btn_start.pack(pady=(20, 5))
+
+def create_rules_label():
+    global lbl_rules
+    lbl_rules = Label(
+        frame,
+        text="You will get 20 minutes to solve the quiz",
+        width=100,
+        font=("Times", 14),
+        background="#007875",
+        foreground="#FACA2F"
+    )
+    lbl_rules.pack(pady=(10, 0))
 
 def create_skip_submit_buttons():
     global btn_skip, btn_submit
@@ -240,6 +274,42 @@ def start_quiz():
     )
     r4.pack(pady=5)
 
+# Different functions's implementations
+
+ # Call the function to start the quiz jisme questions and options honge
+
+def startButtonPressed():
+    response = messagebox.askyesno("This is my popup", "Do you want to start the quiz?")
+    if response:
+        # If the user selects "Yes", proceed to start the quiz
+        label_image.destroy()
+        label_text.destroy()
+        btn_start.destroy()
+        lbl_instruction.destroy()
+        lbl_rules.destroy()
+        create_skip_submit_buttons()  # Call the function to create skip and submit buttons
+        start_quiz()
+    else:
+        # If the user selects "No", close the window
+        root.destroy()
+ 
+def destroy_widgets():
+    lbl_instruction.destroy()
+    lbl_rules.destroy()
+    btn_start.destroy()
+
+    label_image.destroy()
+    label_text.destroy()
+
+    btn_submit.destroy()
+    btn_skip.destroy()
+
+    lbl_Questions.destroy()
+    r1.destroy()
+    r2.destroy()
+    r3.destroy()
+    r4.destroy()
+
 skipped_questions = 0
 user_answer = []
 
@@ -271,6 +341,7 @@ def skipQuestion():
     skipped_questions += 1
     lbl_Questions.config(text=questions[ques])  # Display the next question
 
+
 answers = [3, 1, 1, 2, 0, 0, 3, 0, 3, 0]
 
 def calc():
@@ -288,9 +359,12 @@ def calc():
                 correct_answers += 1
             else:
                 wrong_answers += 1
+        # else:
+        #     skipped_questions += 1 
 
     show_result(score, correct_answers, wrong_answers, skipped_questions)
     destroy_widgets()
+
 
 def show_result(score, correct_answers, wrong_answers, skipped_questions):
     # Destroy existing widgets
@@ -314,5 +388,5 @@ def show_result(score, correct_answers, wrong_answers, skipped_questions):
     )
     score_label.pack(pady=20)
 
-create_widgets()
+
 root.mainloop()
