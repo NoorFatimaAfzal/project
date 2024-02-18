@@ -267,6 +267,32 @@ def start_quiz():
     )
     r4.pack(pady=5)
 
+def congrats_image():
+    img = Image.open("congrats.png")
+    img = img.resize((200, 200), Image.NEAREST)
+    img = ImageTk.PhotoImage(img)
+
+    lbl_img = Label(
+        frame,
+        image=img,
+        background="#007875"
+    )
+    lbl_img.image = img
+    lbl_img.pack(pady=20)
+
+def try_again_image():
+    img = Image.open("tryagain.jpg")
+    img = img.resize((200, 200), Image.NEAREST)
+    img = ImageTk.PhotoImage(img)
+
+    lbl_img = Label(
+        frame,
+        image=img,
+        background="#007875"
+    )
+    lbl_img.image = img
+    lbl_img.pack(pady=20)    
+
 # Different functions's implementations
 
 def startButtonPressed():
@@ -351,9 +377,18 @@ def calc():
                 wrong_answers += 1
         # else:
         #     skipped_questions += 1 
-
-    show_result(score, correct_answers, wrong_answers, skipped_questions)
-    destroy_widgets()
+    if skipped_questions == 10:
+        messagebox.showwarning("Warning", "You have skipped all the questions")
+        root.destroy()
+    if correct_answers >= 5:
+        show_result(score, correct_answers, wrong_answers, skipped_questions)
+        destroy_widgets()
+        congrats_image()
+    else:
+        show_result(score, correct_answers, wrong_answers, skipped_questions)
+        destroy_widgets()
+        try_again_image()
+    
 
 def show_result(score, correct_answers, wrong_answers, skipped_questions):
     # Destroy existing widgets
