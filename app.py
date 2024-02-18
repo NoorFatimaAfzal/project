@@ -67,8 +67,6 @@ def login():
     else:
         messagebox.showerror("Login", "Login failed")
 
-def loginPage():
-    global label1 
 label1 = Label(
     root, 
     text="Login Page", 
@@ -122,9 +120,6 @@ button = Button(
     command=login
 )
 button.place(x=550, y=500)
-
-
-
 
 def create_widgets():
     global label_image, label_text, btn_start, lbl_instruction, lbl_rules
@@ -211,8 +206,6 @@ def create_skip_submit_buttons():
     )
     btn_submit.pack(side=BOTTOM, padx=20, pady=20)
 
-ques = 0
-
 def start_quiz():
     global lbl_Questions, ques
     lbl_Questions = Label(
@@ -276,12 +269,10 @@ def start_quiz():
 
 # Different functions's implementations
 
- # Call the function to start the quiz jisme questions and options honge
-
 def startButtonPressed():
     response = messagebox.askyesno("This is my popup", "Do you want to start the quiz?")
     if response:
-        # If the user selects "Yes", proceed to start the quiz
+        # If the user selects "Yes",start the quiz jisme questions and options honge
         label_image.destroy()
         label_text.destroy()
         btn_start.destroy()
@@ -310,19 +301,19 @@ def destroy_widgets():
     r3.destroy()
     r4.destroy()
 
+ques = 0
 skipped_questions = 0
 user_answer = []
 
 def selected():
     global radio_var, lbl_Questions, r1, r2, r3, r4, user_answer, ques, skipped_questions
     x = radio_var.get() #is sy pata chale ga k user ne konsa option select kia hai
-    print("Current value of x:", x)
     user_answer.append(x)
     radio_var.set(-1) # is waja sy next question pe ja k user ko select krny ka option milta hai aor yha par do options select nhi ho skty
 
     if ques < len(questions) - 1:
         ques += 1
-        lbl_Questions.config(text=questions[ques]) # it tee=lls k labl question k text ko change krdo
+        lbl_Questions.config(text=questions[ques]) # it tells k labl question k text ko change krdo
         r1['text'] = answers_choice[ques][0] # ye btata hai k r1(yani first radio button) ki jga par konsa option hoga
         r2['text'] = answers_choice[ques][1]
         r3['text'] = answers_choice[ques][2]
@@ -340,7 +331,6 @@ def skipQuestion():
     global skipped_questions
     skipped_questions += 1
     lbl_Questions.config(text=questions[ques])  # Display the next question
-
 
 answers = [3, 1, 1, 2, 0, 0, 3, 0, 3, 0]
 
@@ -365,7 +355,6 @@ def calc():
     show_result(score, correct_answers, wrong_answers, skipped_questions)
     destroy_widgets()
 
-
 def show_result(score, correct_answers, wrong_answers, skipped_questions):
     # Destroy existing widgets
     lbl_Questions.destroy()
@@ -387,6 +376,5 @@ def show_result(score, correct_answers, wrong_answers, skipped_questions):
         background="#007875"
     )
     score_label.pack(pady=20)
-
 
 root.mainloop()
